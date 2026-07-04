@@ -1,0 +1,261 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+  background: #ffffff;
+  color: #0f2a4a;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-white shadow-soft transition hover:bg-primaryDark active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60;
+  }
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-border bg-white px-6 py-3 text-sm font-semibold text-dark transition hover:border-primary hover:text-primary active:scale-[0.98];
+  }
+  .field-label {
+    @apply mb-1.5 block text-sm font-medium text-dark;
+  }
+  .field-input {
+    @apply w-full rounded-lg border border-border bg-white px-4 py-2.5 text-sm text-dark outline-none transition placeholder:text-muted/70 focus:border-primary focus:ring-2 focus:ring-primary/15;
+  }
+  .chip {
+    @apply inline-flex items-center rounded-full bg-surface px-3 py-1 text-xs font-medium text-muted;
+  }
+  .display {
+    @apply font-sans font-extrabold tracking-tight;
+  }
+  /* Valist-style clean sans headline */
+  .h-title {
+    @apply font-sans font-semibold tracking-[-0.02em] text-dark;
+  }
+  /* Small label pill above each section */
+  .eyebrow {
+    @apply inline-flex items-center gap-1.5 rounded-full border border-border bg-surface px-3 py-1 text-[11px] font-medium text-muted;
+  }
+  .text-gradient {
+    @apply bg-gradient-to-r from-primary via-secondary to-primary bg-clip-text text-transparent;
+  }
+  .glass {
+    @apply border border-white/60 bg-white/70 backdrop-blur-xl;
+  }
+}
+
+/* Resume font override — scoped to the sheet so it beats template font classes. */
+.sheet-font-sans,
+.sheet-font-sans * {
+  font-family: "Inter", ui-sans-serif, system-ui, sans-serif !important;
+}
+.sheet-font-serif,
+.sheet-font-serif * {
+  font-family: Georgia, "Times New Roman", serif !important;
+}
+.sheet-font-mono,
+.sheet-font-mono * {
+  font-family: ui-monospace, "SFMono-Regular", "Menlo", monospace !important;
+}
+
+/* Subtle blue glow behind the hero */
+.hero-glow {
+  background-image:
+    radial-gradient(45% 55% at 85% 0%, rgba(37, 99, 235, 0.10) 0%, transparent 60%),
+    radial-gradient(40% 50% at 10% 10%, rgba(59, 130, 246, 0.08) 0%, transparent 55%);
+}
+
+/* Scroll-reveal: hidden until .in is toggled by the Reveal component */
+.reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+.reveal.in {
+  opacity: 1;
+  transform: none;
+}
+
+/* Animated aurora blobs behind the hero */
+.aurora-blob {
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(72px);
+  opacity: 0.16;
+  pointer-events: none;
+}
+
+/* Sheen sweep for buttons/cards */
+.sheen {
+  position: relative;
+  overflow: hidden;
+}
+.sheen::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 40%;
+  height: 100%;
+  background: linear-gradient(
+    100deg,
+    transparent,
+    rgba(255, 255, 255, 0.35),
+    transparent
+  );
+  transform: translateX(-160%);
+  transition: transform 0.7s ease;
+}
+.sheen:hover::after {
+  transform: translateX(320%);
+}
+
+/* Typewriter caret */
+.tw-caret {
+  display: inline-block;
+  margin-left: 2px;
+  font-weight: 400;
+  color: currentColor;
+  animation: caret-blink 1s steps(1) infinite;
+}
+
+/* Animated gradient border wrapper */
+.grad-border {
+  position: relative;
+  border-radius: 20px;
+  padding: 2px;
+  background: conic-gradient(
+    from var(--a, 0deg),
+    #2563eb,
+    #3b82f6,
+    #22c55e,
+    #2563eb
+  );
+  animation: grad-rotate 6s linear infinite;
+}
+@property --a {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+@keyframes grad-rotate {
+  to {
+    --a: 360deg;
+  }
+}
+/* Fallback for browsers without @property: rotate the gradient element */
+@supports not (background: conic-gradient(from var(--a), red, blue)) {
+  .grad-border {
+    background: linear-gradient(120deg, #2563eb, #3b82f6, #22c55e);
+    animation: none;
+  }
+}
+
+/* Rotating headline word */
+.word-slot {
+  position: relative;
+  display: inline-block;
+  vertical-align: baseline;
+  text-align: left;
+}
+.word-slot .word-live {
+  position: absolute;
+  left: 0;
+  top: 0;
+  white-space: nowrap;
+}
+
+/* Lift utility for interactive cards */
+.lift {
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.25s ease, border-color 0.25s ease;
+}
+.lift:hover {
+  transform: translateY(-6px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  .animate-float,
+  .animate-float-slow,
+  .animate-aurora,
+  .animate-aurora-slow,
+  .animate-twinkle,
+  .animate-bob,
+  .animate-marquee,
+  .animate-gradient-x,
+  .animate-spin-slow {
+    animation: none !important;
+  }
+}
+
+/* Grid pattern for hero backdrop */
+.grid-pattern {
+  background-image:
+    linear-gradient(to right, rgba(15, 42, 74, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(15, 42, 74, 0.04) 1px, transparent 1px);
+  background-size: 44px 44px;
+}
+
+/* Print + PDF: keep resume crisp, drop app chrome */
+@media print {
+  body {
+    background: #fff;
+  }
+}
+
+/* Scrollbar polish */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: #e2e8f0;
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #cbd5e1;
+}
+
+/* Blinking caret for the live typing effect */
+.typing-caret::after {
+  content: "▍";
+  margin-left: 1px;
+  color: #2563eb;
+  animation: caret-blink 1s steps(1) infinite;
+}
+@keyframes caret-blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+.shimmer {
+  background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 37%, #f1f5f9 63%);
+  background-size: 400% 100%;
+  animation: shimmer 1.4s ease infinite;
+}
+@keyframes shimmer {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: -100% 0;
+  }
+}

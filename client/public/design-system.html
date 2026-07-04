@@ -1,0 +1,521 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>createcv — Design System</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        /* Brand */
+        --primary: #2563eb;
+        --primary-dark: #1d4ed8;
+        --secondary: #3b82f6;
+        --success: #22c55e;
+        /* Neutrals */
+        --bg: #ffffff;
+        --surface: #f6f8fb;
+        --ink: #0f2a4a;
+        --muted: #64748b;
+        --border: #e2e8f0;
+        /* Radius */
+        --r-sm: 6px;
+        --r-md: 8px;
+        --r-lg: 12px;
+        --r-xl: 16px;
+        --r-2xl: 24px;
+        --r-full: 999px;
+        /* Elevation */
+        --shadow-soft: 0 1px 3px rgba(15, 42, 74, 0.05), 0 8px 24px rgba(15, 42, 74, 0.06);
+        --shadow-card: 0 2px 8px rgba(15, 42, 74, 0.05), 0 16px 40px rgba(15, 42, 74, 0.1);
+        --shadow-float: 0 24px 60px rgba(37, 99, 235, 0.22);
+        /* Type */
+        --font-ui: "Inter", ui-sans-serif, system-ui, sans-serif;
+        --font-logo: Futura, "Century Gothic", "Trebuchet MS", sans-serif;
+        --font-serif: Georgia, "Times New Roman", serif;
+        --font-mono: ui-monospace, "SFMono-Regular", Menlo, monospace;
+        --ease: cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body {
+        margin: 0;
+        font-family: var(--font-ui);
+        color: var(--ink);
+        background: var(--bg);
+        -webkit-font-smoothing: antialiased;
+      }
+      a { color: var(--primary); }
+      code {
+        font-family: var(--font-mono);
+        font-size: 0.85em;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        padding: 1px 6px;
+        color: var(--ink);
+      }
+
+      /* Layout */
+      .layout { display: flex; min-height: 100vh; }
+      .sidebar {
+        position: sticky;
+        top: 0;
+        align-self: flex-start;
+        width: 232px;
+        height: 100vh;
+        overflow-y: auto;
+        border-right: 1px solid var(--border);
+        padding: 22px 16px;
+        flex-shrink: 0;
+      }
+      .sidebar .brand { display: flex; align-items: center; gap: 8px; margin-bottom: 20px; }
+      .sidebar .brand .wm { font-family: var(--font-logo); font-weight: 500; font-size: 20px; letter-spacing: -0.5px; }
+      .sidebar nav a {
+        display: block;
+        padding: 7px 10px;
+        border-radius: var(--r-md);
+        font-size: 13.5px;
+        font-weight: 500;
+        color: var(--muted);
+        text-decoration: none;
+        transition: background 0.15s var(--ease), color 0.15s var(--ease);
+      }
+      .sidebar nav a:hover { background: var(--surface); color: var(--ink); }
+      .sidebar .cat { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #94a3b8; margin: 16px 10px 4px; }
+
+      main { flex: 1; min-width: 0; padding: 40px clamp(20px, 5vw, 64px) 120px; max-width: 1080px; }
+      .hero-head h1 { font-size: 40px; font-weight: 800; letter-spacing: -1px; margin: 0 0 6px; }
+      .hero-head p { color: var(--muted); font-size: 16px; margin: 0; max-width: 620px; }
+      .pill { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--border); background: var(--surface); border-radius: var(--r-full); padding: 4px 12px; font-size: 12px; font-weight: 600; color: var(--muted); }
+
+      section { padding-top: 56px; scroll-margin-top: 20px; }
+      section > h2 { font-size: 26px; font-weight: 800; letter-spacing: -0.4px; margin: 0 0 4px; }
+      section > .lead { color: var(--muted); margin: 0 0 24px; font-size: 15px; }
+      h3.sub { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); margin: 28px 0 12px; }
+
+      .grid { display: grid; gap: 16px; }
+      .demo {
+        border: 1px solid var(--border);
+        border-radius: var(--r-xl);
+        background: var(--bg);
+        padding: 24px;
+      }
+      .demo.surface { background: var(--surface); }
+      .row { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; }
+
+      /* ---- Color tokens ---- */
+      .swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+      .swatch { border: 1px solid var(--border); border-radius: var(--r-lg); overflow: hidden; }
+      .swatch .chip { height: 62px; }
+      .swatch .meta { padding: 8px 10px; }
+      .swatch .name { font-size: 12.5px; font-weight: 700; }
+      .swatch .hex { font-family: var(--font-mono); font-size: 11px; color: var(--muted); text-transform: uppercase; }
+      .swatch .var { font-family: var(--font-mono); font-size: 10.5px; color: #94a3b8; }
+      .accent-row { display: flex; flex-wrap: wrap; gap: 8px; }
+      .accent-row .dot { width: 34px; height: 34px; border-radius: var(--r-full); box-shadow: inset 0 0 0 1px rgba(0,0,0,.06); }
+
+      /* ---- Type scale ---- */
+      .type-row { display: flex; align-items: baseline; gap: 20px; padding: 12px 0; border-bottom: 1px dashed var(--border); }
+      .type-row .spec { font-family: var(--font-mono); font-size: 11px; color: var(--muted); width: 190px; flex-shrink: 0; }
+
+      /* ---- Buttons (mirror the app) ---- */
+      .btn {
+        display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+        border-radius: var(--r-full);
+        padding: 12px 24px; font-size: 14px; font-weight: 600; font-family: var(--font-ui);
+        border: 1px solid transparent; cursor: pointer;
+        transition: background 0.18s var(--ease), border-color 0.18s var(--ease), color 0.18s var(--ease), transform 0.05s var(--ease);
+      }
+      .btn:active { transform: scale(0.98); }
+      .btn:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.35); }
+      .btn-primary { background: var(--primary); color: #fff; box-shadow: var(--shadow-soft); }
+      .btn-primary:hover { background: var(--primary-dark); }
+      .btn-ghost { background: #fff; border-color: var(--border); color: var(--ink); }
+      .btn-ghost:hover { border-color: var(--primary); color: var(--primary); }
+      .btn-dark { background: var(--ink); color: #fff; }
+      .btn-dark:hover { background: #0b2038; }
+      .btn-white { background: #fff; color: var(--primary); box-shadow: var(--shadow-soft); }
+      .btn-white:hover { background: var(--surface); }
+      .btn[disabled] { opacity: 0.6; cursor: not-allowed; }
+      .btn.sm { padding: 8px 16px; font-size: 13px; }
+      .btn.icon { padding: 10px; border-radius: var(--r-md); }
+      .state-tag { font-family: var(--font-mono); font-size: 10.5px; color: var(--muted); display: block; margin-top: 8px; text-align: center; }
+      .btn-cell { text-align: center; }
+
+      /* ---- Forms (mirror the app) ---- */
+      label.fl { display: block; font-size: 13px; font-weight: 500; margin-bottom: 6px; }
+      .field {
+        width: 100%; border: 1px solid var(--border); background: #fff;
+        border-radius: var(--r-md); padding: 10px 16px; font-size: 14px; font-family: var(--font-ui); color: var(--ink);
+        outline: none; transition: border-color 0.15s var(--ease), box-shadow 0.15s var(--ease);
+      }
+      .field::placeholder { color: rgba(100,116,139,0.7); }
+      .field:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(37,99,235,0.15); }
+      .field.error { border-color: #ef4444; }
+      .field.error:focus { box-shadow: 0 0 0 3px rgba(239,68,68,0.15); }
+      .field:disabled { background: var(--surface); color: var(--muted); cursor: not-allowed; }
+      input[type="range"] { width: 100%; accent-color: var(--primary); }
+      input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--primary); }
+      .seg { display: inline-flex; gap: 6px; }
+      .seg button {
+        border: 1px solid var(--border); background: #fff; color: var(--muted);
+        border-radius: var(--r-md); padding: 8px 14px; font-size: 13px; font-weight: 500; cursor: pointer; font-family: var(--font-ui);
+        transition: all 0.15s var(--ease);
+      }
+      .seg button:hover { border-color: rgba(37,99,235,0.4); }
+      .seg button.active { border-color: var(--primary); background: rgba(37,99,235,0.06); color: var(--primary); }
+
+      /* ---- Badges ---- */
+      .badge { display: inline-flex; align-items: center; border-radius: var(--r-sm); padding: 2px 7px; font-size: 10.5px; font-weight: 800; letter-spacing: 0.02em; }
+      .badge.ats { background: var(--success); color: #fff; }
+      .badge.pro { background: var(--ink); color: #fff; }
+      .badge.free { background: #fff; color: var(--success); box-shadow: inset 0 0 0 1px rgba(34,197,94,0.35); }
+      .badge.soft { background: var(--surface); color: var(--muted); border-radius: var(--r-full); padding: 3px 10px; font-weight: 600; }
+      .badge.color { background: rgba(37,99,235,0.1); color: var(--primary); border-radius: var(--r-full); padding: 3px 10px; font-weight: 600; }
+      .kicker { display: inline-block; background: rgba(37,99,235,0.1); color: var(--primary); border-radius: var(--r-full); padding: 4px 12px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+
+      /* ---- Cards ---- */
+      .card { border: 1px solid var(--border); border-radius: var(--r-xl); background: #fff; padding: 22px; box-shadow: var(--shadow-soft); transition: transform 0.2s var(--ease), box-shadow 0.2s var(--ease), border-color 0.2s var(--ease); }
+      .card.lift:hover { transform: translateY(-4px); box-shadow: var(--shadow-card); border-color: rgba(37,99,235,0.4); }
+      .card.reco { border-color: var(--primary); box-shadow: var(--shadow-card); outline: 2px solid rgba(37,99,235,0.15); outline-offset: -1px; }
+      .icon-tile { width: 44px; height: 44px; border-radius: var(--r-lg); background: linear-gradient(135deg, var(--primary), var(--secondary)); display: flex; align-items: center; justify-content: center; color: #fff; box-shadow: var(--shadow-soft); }
+
+      /* ---- Elevation ---- */
+      .elev { height: 84px; border-radius: var(--r-lg); background: #fff; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; color: var(--muted); border: 1px solid var(--border); }
+
+      /* ---- Spacing / radius ---- */
+      .space-bar { background: rgba(37,99,235,0.14); height: 16px; border-radius: 3px; }
+      .radius-box { width: 72px; height: 72px; background: rgba(37,99,235,0.1); border: 1px solid rgba(37,99,235,0.3); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: var(--primary); }
+
+      /* logo demos */
+      .logo-lockup { display: inline-flex; align-items: center; gap: 8px; }
+      .logo-lockup .wm { font-family: var(--font-logo); font-weight: 500; letter-spacing: -0.5px; }
+      .dark-chip { background: #0f172a; border-radius: var(--r-lg); padding: 20px 24px; }
+      .app-tile { width: 72px; height: 72px; border-radius: 18px; background: #eff4ff; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-soft); }
+
+      .note { font-size: 13px; color: var(--muted); background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--primary); border-radius: var(--r-md); padding: 12px 14px; margin-top: 14px; }
+      table.tok { width: 100%; border-collapse: collapse; font-size: 13px; }
+      table.tok th, table.tok td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--border); }
+      table.tok th { color: var(--muted); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; }
+      table.tok td code { background: transparent; border: none; padding: 0; }
+      @media (max-width: 820px) { .sidebar { display: none; } }
+    </style>
+  </head>
+  <body>
+    <div class="layout">
+      <!-- ============ SIDEBAR ============ -->
+      <aside class="sidebar">
+        <div class="brand">
+          <svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true">
+            <rect x="7" y="8" width="16" height="20" rx="3" fill="#2563EB" opacity="0.22" transform="translate(5 -5)" />
+            <rect x="7" y="8" width="16" height="20" rx="3" fill="#2563EB" opacity="0.45" transform="translate(2.5 -2.5)" />
+            <rect x="7" y="8" width="16" height="20" rx="3" fill="#2563EB" />
+            <rect x="10" y="22" width="9" height="1.6" rx="0.8" fill="#fff" opacity="0.85" />
+            <rect x="10" y="24.6" width="6" height="1.6" rx="0.8" fill="#fff" opacity="0.85" />
+            <path d="M14 9 C14 13.92 15.08 15 20 15 C15.08 15 14 16.08 14 21 C14 16.08 12.92 15 8 15 C12.92 15 14 13.92 14 9 Z" fill="#fff" />
+            <path d="M21 6.4 C21 8.53 21.47 9 23.6 9 C21.47 9 21 9.47 21 11.6 C21 9.47 20.53 9 18.4 9 C20.53 9 21 8.53 21 6.4 Z" fill="#fff" />
+          </svg>
+          <span class="wm"><span style="color:#0f2a4a">create</span><span style="color:#2563eb">cv</span></span>
+        </div>
+        <nav>
+          <div class="cat">Foundations</div>
+          <a href="#logo">Logo &amp; brand</a>
+          <a href="#color">Color</a>
+          <a href="#accent">Accent palette</a>
+          <a href="#type">Typography</a>
+          <a href="#spacing">Spacing</a>
+          <a href="#radius">Radius</a>
+          <a href="#elevation">Elevation</a>
+          <a href="#motion">Motion</a>
+          <a href="#icons">Iconography</a>
+          <div class="cat">Components</div>
+          <a href="#buttons">Buttons</a>
+          <a href="#forms">Form controls</a>
+          <a href="#badges">Badges &amp; chips</a>
+          <a href="#cards">Cards</a>
+          <a href="#nav">Navigation</a>
+          <a href="#a11y">Accessibility</a>
+        </nav>
+      </aside>
+
+      <!-- ============ MAIN ============ -->
+      <main>
+        <div class="hero-head">
+          <span class="pill"><span style="width:7px;height:7px;border-radius:99px;background:#22c55e"></span> Design System · v1.0</span>
+          <h1 style="margin-top:14px">
+            <span style="font-family:var(--font-logo);font-weight:500;letter-spacing:-1px"><span style="color:#0f2a4a">create</span><span style="color:#2563eb">cv</span></span>
+            Design System
+          </h1>
+          <p>The complete visual language for the createcv AI resume builder — tokens, typography, and every interactive component with its states. Values mirror the live app (Tailwind config + <code>index.css</code>).</p>
+        </div>
+
+        <!-- LOGO -->
+        <section id="logo">
+          <h2>Logo &amp; brand</h2>
+          <p class="lead">Mark: a layered “file stack” (back sheets at low opacity) with a large AI sparkle. Wordmark: Futura, two-tone — <b>create</b> in ink, <b>cv</b> in primary blue.</p>
+          <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(240px,1fr))">
+            <div class="demo"><div class="logo-lockup"><svg viewBox="0 0 32 32" width="40" height="40"><rect x="7" y="8" width="16" height="20" rx="3" fill="#2563EB" opacity="0.22" transform="translate(5 -5)"/><rect x="7" y="8" width="16" height="20" rx="3" fill="#2563EB" opacity="0.45" transform="translate(2.5 -2.5)"/><rect x="7" y="8" width="16" height="20" rx="3" fill="#2563EB"/><rect x="10" y="22" width="9" height="1.6" rx="0.8" fill="#fff" opacity="0.85"/><rect x="10" y="24.6" width="6" height="1.6" rx="0.8" fill="#fff" opacity="0.85"/><path d="M14 9 C14 13.92 15.08 15 20 15 C15.08 15 14 16.08 14 21 C14 16.08 12.92 15 8 15 C12.92 15 14 13.92 14 9 Z" fill="#fff"/><path d="M21 6.4 C21 8.53 21.47 9 23.6 9 C21.47 9 21 9.47 21 11.6 C21 9.47 20.53 9 18.4 9 C20.53 9 21 8.53 21 6.4 Z" fill="#fff"/></svg><span class="wm" style="font-size:26px"><span style="color:#0f2a4a">create</span><span style="color:#2563eb">cv</span></span></div><span class="state-tag">Primary lockup</span></div>
+            <div class="demo dark-chip" style="display:flex;align-items:center;justify-content:center"><div class="logo-lockup"><svg viewBox="0 0 32 32" width="40" height="40"><rect x="7" y="8" width="16" height="20" rx="3" fill="#fff" opacity="0.25" transform="translate(5 -5)"/><rect x="7" y="8" width="16" height="20" rx="3" fill="#fff" opacity="0.5" transform="translate(2.5 -2.5)"/><rect x="7" y="8" width="16" height="20" rx="3" fill="#fff"/><path d="M14 9 C14 13.92 15.08 15 20 15 C15.08 15 14 16.08 14 21 C14 16.08 12.92 15 8 15 C12.92 15 14 13.92 14 9 Z" fill="#60A5FA"/><path d="M21 6.4 C21 8.53 21.47 9 23.6 9 C21.47 9 21 9.47 21 11.6 C21 9.47 20.53 9 18.4 9 C20.53 9 21 8.53 21 6.4 Z" fill="#60A5FA"/></svg><span class="wm" style="font-size:26px"><span style="color:#fff">create</span><span style="color:#60a5fa">cv</span></span></div></div>
+            <div class="demo" style="display:flex;gap:20px;align-items:center;justify-content:center"><div class="app-tile"><svg viewBox="0 0 32 32" width="44" height="44"><rect x="7" y="8" width="16" height="20" rx="3" fill="#2563EB" opacity="0.25" transform="translate(5 -5)"/><rect x="7" y="8" width="16" height="20" rx="3" fill="#2563EB" opacity="0.5" transform="translate(2.5 -2.5)"/><rect x="7" y="8" width="16" height="20" rx="3" fill="#2563EB"/><path d="M14 9 C14 13.92 15.08 15 20 15 C15.08 15 14 16.08 14 21 C14 16.08 12.92 15 8 15 C12.92 15 14 13.92 14 9 Z" fill="#fff"/><path d="M21 6.4 C21 8.53 21.47 9 23.6 9 C21.47 9 21 9.47 21 11.6 C21 9.47 20.53 9 18.4 9 C20.53 9 21 8.53 21 6.4 Z" fill="#fff"/></svg></div><span class="state-tag" style="margin:0">App icon / favicon</span></div>
+          </div>
+          <div class="note">Clear space ≥ the height of the sparkle on all sides. Minimum mark size 16px. Never recolor the wordmark halves, stretch, or add effects.</div>
+        </section>
+
+        <!-- COLOR -->
+        <section id="color">
+          <h2>Color</h2>
+          <p class="lead">One blue brand ramp, a calm slate-neutral set, and a single semantic green. Blue for action &amp; brand; green for success/ATS only.</p>
+          <h3 class="sub">Brand &amp; semantic</h3>
+          <div class="swatches">
+            <div class="swatch"><div class="chip" style="background:#2563eb"></div><div class="meta"><div class="name">Primary</div><div class="hex">#2563EB</div><div class="var">--primary</div></div></div>
+            <div class="swatch"><div class="chip" style="background:#1d4ed8"></div><div class="meta"><div class="name">Primary / hover</div><div class="hex">#1D4ED8</div><div class="var">--primary-dark</div></div></div>
+            <div class="swatch"><div class="chip" style="background:#3b82f6"></div><div class="meta"><div class="name">Secondary</div><div class="hex">#3B82F6</div><div class="var">--secondary</div></div></div>
+            <div class="swatch"><div class="chip" style="background:#22c55e"></div><div class="meta"><div class="name">Success / ATS</div><div class="hex">#22C55E</div><div class="var">--success</div></div></div>
+          </div>
+          <h3 class="sub">Neutrals &amp; surfaces</h3>
+          <div class="swatches">
+            <div class="swatch"><div class="chip" style="background:#0f2a4a"></div><div class="meta"><div class="name">Ink / text</div><div class="hex">#0F2A4A</div><div class="var">--ink · dark</div></div></div>
+            <div class="swatch"><div class="chip" style="background:#64748b"></div><div class="meta"><div class="name">Muted text</div><div class="hex">#64748B</div><div class="var">--muted</div></div></div>
+            <div class="swatch"><div class="chip" style="background:#e2e8f0"></div><div class="meta"><div class="name">Border</div><div class="hex">#E2E8F0</div><div class="var">--border</div></div></div>
+            <div class="swatch"><div class="chip" style="background:#f6f8fb"></div><div class="meta"><div class="name">Surface</div><div class="hex">#F6F8FB</div><div class="var">--surface</div></div></div>
+            <div class="swatch"><div class="chip" style="background:#ffffff;box-shadow:inset 0 0 0 1px #e2e8f0"></div><div class="meta"><div class="name">Background</div><div class="hex">#FFFFFF</div><div class="var">--bg</div></div></div>
+          </div>
+        </section>
+
+        <!-- ACCENT -->
+        <section id="accent">
+          <h2>Accent palette (resume)</h2>
+          <p class="lead">User-selectable accent for the generated resume — 18 presets + a custom picker + an intensity control (40–100% opacity). Minimal &amp; Classic templates ignore accent (kept black &amp; white).</p>
+          <div class="demo">
+            <div class="accent-row">
+              <span class="dot" style="background:#2563eb" title="Blue"></span><span class="dot" style="background:#0284c7"></span><span class="dot" style="background:#0d9488"></span><span class="dot" style="background:#059669"></span><span class="dot" style="background:#16a34a"></span><span class="dot" style="background:#65a30d"></span><span class="dot" style="background:#d97706"></span><span class="dot" style="background:#ea580c"></span><span class="dot" style="background:#dc2626"></span><span class="dot" style="background:#e11d48"></span><span class="dot" style="background:#db2777"></span><span class="dot" style="background:#c026d3"></span><span class="dot" style="background:#7c3aed"></span><span class="dot" style="background:#4f46e5"></span><span class="dot" style="background:#1e3a8a"></span><span class="dot" style="background:#334155"></span><span class="dot" style="background:#111827"></span><span class="dot" style="background:#92400e"></span>
+            </div>
+            <div style="margin-top:18px;max-width:280px">
+              <label class="fl">Accent intensity — 70%</label>
+              <input type="range" min="40" max="100" value="70" />
+            </div>
+          </div>
+          <div class="note">Derived tokens per accent: <code>--accent</code> (base), <code>--accent-soft</code> (10% tint), <code>--accent-border</code> (28%), <code>--accent-strong</code> (70%). Stored as concrete <code>rgba()</code> so they survive PDF export (html2canvas).</div>
+        </section>
+
+        <!-- TYPE -->
+        <section id="type">
+          <h2>Typography</h2>
+          <p class="lead">UI &amp; body use <b>Inter</b>. The logo uses <b>Futura</b> (geometric). Resumes can switch between Sans / Serif / Mono.</p>
+          <h3 class="sub">Families</h3>
+          <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr))">
+            <div class="demo"><div style="font-family:var(--font-ui);font-size:26px;font-weight:800">Inter</div><span class="state-tag" style="text-align:left">UI · body · headings</span></div>
+            <div class="demo"><div style="font-family:var(--font-logo);font-size:26px;font-weight:500">Futura</div><span class="state-tag" style="text-align:left">Logo wordmark only</span></div>
+            <div class="demo"><div style="font-family:var(--font-serif);font-size:26px;font-weight:700">Georgia</div><span class="state-tag" style="text-align:left">Serif resume option</span></div>
+            <div class="demo"><div style="font-family:var(--font-mono);font-size:24px;font-weight:700">Menlo</div><span class="state-tag" style="text-align:left">Mono resume option</span></div>
+          </div>
+          <h3 class="sub">Scale</h3>
+          <div class="demo">
+            <div class="type-row"><span class="spec">Display · 800 · -1px</span><span style="font-size:40px;font-weight:800;letter-spacing:-1px">Land your dream job</span></div>
+            <div class="type-row"><span class="spec">H1 · 800 · 34px</span><span style="font-size:34px;font-weight:800;letter-spacing:-0.5px">Section heading</span></div>
+            <div class="type-row"><span class="spec">H2 · 700 · 26px</span><span style="font-size:26px;font-weight:700">Subsection heading</span></div>
+            <div class="type-row"><span class="spec">H3 · 600 · 18px</span><span style="font-size:18px;font-weight:600">Card title</span></div>
+            <div class="type-row"><span class="spec">Body · 400 · 15px</span><span style="font-size:15px">Body copy for descriptions and paragraphs.</span></div>
+            <div class="type-row"><span class="spec">Small · 500 · 13px</span><span style="font-size:13px;font-weight:500;color:var(--muted)">Helper &amp; secondary text</span></div>
+            <div class="type-row" style="border:none"><span class="spec">Caption · 700 · 11px · caps</span><span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--muted)">Eyebrow / label</span></div>
+          </div>
+        </section>
+
+        <!-- SPACING -->
+        <section id="spacing">
+          <h2>Spacing</h2>
+          <p class="lead">4px base unit. Common steps below; use multiples of 4 everywhere.</p>
+          <div class="demo grid" style="gap:10px">
+            <div class="row"><span class="spec" style="font-family:var(--font-mono);font-size:11px;width:80px;color:var(--muted)">4 · xs</span><div class="space-bar" style="width:4px"></div></div>
+            <div class="row"><span class="spec" style="font-family:var(--font-mono);font-size:11px;width:80px;color:var(--muted)">8 · sm</span><div class="space-bar" style="width:8px"></div></div>
+            <div class="row"><span class="spec" style="font-family:var(--font-mono);font-size:11px;width:80px;color:var(--muted)">12 · md</span><div class="space-bar" style="width:12px"></div></div>
+            <div class="row"><span class="spec" style="font-family:var(--font-mono);font-size:11px;width:80px;color:var(--muted)">16 · lg</span><div class="space-bar" style="width:16px"></div></div>
+            <div class="row"><span class="spec" style="font-family:var(--font-mono);font-size:11px;width:80px;color:var(--muted)">24 · xl</span><div class="space-bar" style="width:24px"></div></div>
+            <div class="row"><span class="spec" style="font-family:var(--font-mono);font-size:11px;width:80px;color:var(--muted)">32 · 2xl</span><div class="space-bar" style="width:32px"></div></div>
+            <div class="row"><span class="spec" style="font-family:var(--font-mono);font-size:11px;width:80px;color:var(--muted)">48 · 3xl</span><div class="space-bar" style="width:48px"></div></div>
+            <div class="row"><span class="spec" style="font-family:var(--font-mono);font-size:11px;width:80px;color:var(--muted)">64 · 4xl</span><div class="space-bar" style="width:64px"></div></div>
+          </div>
+        </section>
+
+        <!-- RADIUS -->
+        <section id="radius">
+          <h2>Radius</h2>
+          <p class="lead">Soft, friendly corners. Buttons &amp; pills are fully rounded; cards use 16–24px.</p>
+          <div class="demo row" style="gap:22px">
+            <div style="text-align:center"><div class="radius-box" style="border-radius:6px">6</div><span class="state-tag">sm · inputs</span></div>
+            <div style="text-align:center"><div class="radius-box" style="border-radius:8px">8</div><span class="state-tag">md · base</span></div>
+            <div style="text-align:center"><div class="radius-box" style="border-radius:12px">12</div><span class="state-tag">lg</span></div>
+            <div style="text-align:center"><div class="radius-box" style="border-radius:16px">16</div><span class="state-tag">xl · cards</span></div>
+            <div style="text-align:center"><div class="radius-box" style="border-radius:24px">24</div><span class="state-tag">2xl · panels</span></div>
+            <div style="text-align:center"><div class="radius-box" style="border-radius:999px">∞</div><span class="state-tag">full · buttons</span></div>
+          </div>
+        </section>
+
+        <!-- ELEVATION -->
+        <section id="elevation">
+          <h2>Elevation</h2>
+          <p class="lead">Three soft, low-contrast shadows. No harsh drop shadows.</p>
+          <div class="demo surface grid" style="grid-template-columns:repeat(auto-fit,minmax(180px,1fr))">
+            <div class="elev" style="box-shadow:var(--shadow-soft)">soft</div>
+            <div class="elev" style="box-shadow:var(--shadow-card)">card</div>
+            <div class="elev" style="box-shadow:var(--shadow-float)">float</div>
+          </div>
+        </section>
+
+        <!-- MOTION -->
+        <section id="motion">
+          <h2>Motion</h2>
+          <p class="lead">Quick, calm transitions. Hover states animate; a subtle lift on interactive cards. Reduced-motion respected.</p>
+          <table class="tok">
+            <tr><th>Token</th><th>Value</th><th>Use</th></tr>
+            <tr><td><code>duration/fast</code></td><td>150ms</td><td>color, background, border on hover/focus</td></tr>
+            <tr><td><code>duration/base</code></td><td>180–200ms</td><td>buttons, cards</td></tr>
+            <tr><td><code>duration/slow</code></td><td>300–500ms</td><td>accordions, progress bar</td></tr>
+            <tr><td><code>ease</code></td><td>cubic-bezier(.4,0,.2,1)</td><td>default easing</td></tr>
+            <tr><td><code>press</code></td><td>scale(.98)</td><td>button :active</td></tr>
+            <tr><td><code>lift</code></td><td>translateY(-4px)</td><td>card :hover</td></tr>
+          </table>
+        </section>
+
+        <!-- ICONS -->
+        <section id="icons">
+          <h2>Iconography</h2>
+          <p class="lead">Line icons, 1.8px stroke, rounded caps &amp; joins, 24×24 grid, <code>currentColor</code>. A few examples:</p>
+          <div class="demo row" style="gap:22px;color:var(--ink)">
+            <svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M12 3v12M7 11l5 5 5-5M5 21h14"/></svg>
+            <svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5Z"/></svg>
+            <svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3Z"/><path d="M9 12l2 2 4-4"/></svg>
+            <svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M5.6 5.6l2.8 2.8M15.6 15.6l2.8 2.8M18.4 5.6l-2.8 2.8M8.4 15.6l-2.8 2.8"/></svg>
+            <svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+            <svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </div>
+        </section>
+
+        <!-- BUTTONS -->
+        <section id="buttons">
+          <h2>Buttons</h2>
+          <p class="lead">Fully rounded. Primary = blue action; Ghost = secondary; Dark = high-contrast; White = on-dark. Hover them — states are live.</p>
+
+          <h3 class="sub">Primary — all states</h3>
+          <div class="demo row" style="gap:26px">
+            <div class="btn-cell"><button class="btn btn-primary">Build my resume</button><span class="state-tag">default → hover</span></div>
+            <div class="btn-cell"><button class="btn btn-primary" style="background:var(--primary-dark)">Build my resume</button><span class="state-tag">:hover (forced)</span></div>
+            <div class="btn-cell"><button class="btn btn-primary" style="box-shadow:0 0 0 3px rgba(37,99,235,.35)">Build my resume</button><span class="state-tag">:focus-visible</span></div>
+            <div class="btn-cell"><button class="btn btn-primary" disabled>Build my resume</button><span class="state-tag">:disabled</span></div>
+          </div>
+
+          <h3 class="sub">Variants</h3>
+          <div class="demo row" style="gap:26px">
+            <div class="btn-cell"><button class="btn btn-ghost">See templates</button><span class="state-tag">ghost</span></div>
+            <div class="btn-cell"><button class="btn btn-dark">Get started</button><span class="state-tag">dark</span></div>
+            <div class="btn-cell" style="background:#0f172a;padding:14px;border-radius:12px"><button class="btn btn-white">Build free</button><span class="state-tag" style="color:#94a3b8">white on dark</span></div>
+            <div class="btn-cell"><button class="btn btn-primary sm">Small</button><span class="state-tag">small</span></div>
+            <div class="btn-cell"><button class="btn btn-ghost icon" aria-label="Copy"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg></button><span class="state-tag">icon</span></div>
+          </div>
+          <div class="note">Focus ring: <code>0 0 0 3px rgba(37,99,235,.35)</code> · Press: <code>scale(.98)</code> · Disabled: <code>opacity .6</code>. Always keep a visible focus state for keyboard users.</div>
+        </section>
+
+        <!-- FORMS -->
+        <section id="forms">
+          <h2>Form controls</h2>
+          <p class="lead">Click into the fields — focus rings are live.</p>
+          <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(240px,1fr))">
+            <div class="demo"><label class="fl">Text input</label><input class="field" placeholder="Jordan Avery" /><span class="state-tag" style="text-align:left">default · focus (click in)</span></div>
+            <div class="demo"><label class="fl">Error state</label><input class="field error" value="not-an-email" /><span class="state-tag" style="text-align:left">.error — red border</span></div>
+            <div class="demo"><label class="fl">Disabled</label><input class="field" value="Locked" disabled /><span class="state-tag" style="text-align:left">:disabled</span></div>
+            <div class="demo"><label class="fl">Select</label><select class="field"><option>Professional</option><option>Creative</option><option>Executive</option></select></div>
+            <div class="demo"><label class="fl">Textarea</label><textarea class="field" rows="2" placeholder="Describe your work…"></textarea></div>
+            <div class="demo"><label class="fl">Checkbox</label><label style="display:flex;gap:8px;align-items:center;font-size:13px;color:var(--muted)"><input type="checkbox" checked /> I currently work here</label></div>
+            <div class="demo"><label class="fl">Range · slider</label><input type="range" min="0" max="100" value="70" /></div>
+            <div class="demo"><label class="fl">Segmented (font)</label><div class="seg"><button class="active">Default</button><button>Sans</button><button>Serif</button><button>Mono</button></div></div>
+            <div class="demo"><label class="fl">Color swatches</label><div class="accent-row"><span class="dot" style="background:#2563eb;box-shadow:0 0 0 2px #fff,0 0 0 4px #2563eb"></span><span class="dot" style="background:#0d9488"></span><span class="dot" style="background:#e11d48"></span><span class="dot" style="background:#7c3aed"></span></div></div>
+          </div>
+        </section>
+
+        <!-- BADGES -->
+        <section id="badges">
+          <h2>Badges &amp; chips</h2>
+          <p class="lead">Template status &amp; metadata markers.</p>
+          <div class="demo row" style="gap:12px">
+            <span class="badge ats">ATS</span>
+            <span class="badge pro">PRO</span>
+            <span class="badge free">FREE</span>
+            <span class="badge soft">Photo</span>
+            <span class="badge color">Color</span>
+            <span class="kicker">Features</span>
+            <span class="pill">Powered by Claude AI</span>
+          </div>
+        </section>
+
+        <!-- CARDS -->
+        <section id="cards">
+          <h2>Cards</h2>
+          <p class="lead">Hover the first two — they lift. Recommended cards get a primary ring.</p>
+          <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(230px,1fr))">
+            <div class="card lift">
+              <div class="icon-tile"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M5.6 5.6l2.8 2.8M15.6 15.6l2.8 2.8M18.4 5.6l-2.8 2.8M8.4 15.6l-2.8 2.8"/></svg></div>
+              <h3 style="margin:14px 0 4px;font-size:16px">AI-written content</h3>
+              <p style="margin:0;font-size:13px;color:var(--muted)">Feature card with hover lift.</p>
+            </div>
+            <div class="card lift reco">
+              <div class="row" style="justify-content:space-between"><h3 style="margin:0;font-size:16px">Pro</h3><span class="badge pro">Popular</span></div>
+              <div style="font-size:32px;font-weight:800;margin:10px 0">$5<span style="font-size:13px;color:var(--muted);font-weight:500">/mo</span></div>
+              <button class="btn btn-primary" style="width:100%">Go Pro</button>
+            </div>
+            <div class="card" style="padding:12px">
+              <div style="border:1px solid var(--border);border-radius:8px;background:var(--surface);padding:10px;text-align:center;color:var(--muted);font-size:12px">Template<br/>thumbnail frame</div>
+              <div class="row" style="justify-content:space-between;margin-top:10px"><b style="font-size:13px">Modern</b><span class="badge ats">ATS</span></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- NAV -->
+        <section id="nav">
+          <h2>Navigation</h2>
+          <p class="lead">Top nav bar and the multi-step progress indicator.</p>
+          <div class="demo" style="padding:0;overflow:hidden">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid var(--border)">
+              <div class="logo-lockup"><svg viewBox="0 0 32 32" width="28" height="28"><rect x="7" y="8" width="16" height="20" rx="3" fill="#2563EB" opacity="0.22" transform="translate(5 -5)"/><rect x="7" y="8" width="16" height="20" rx="3" fill="#2563EB" opacity="0.45" transform="translate(2.5 -2.5)"/><rect x="7" y="8" width="16" height="20" rx="3" fill="#2563EB"/><path d="M14 9 C14 13.92 15.08 15 20 15 C15.08 15 14 16.08 14 21 C14 16.08 12.92 15 8 15 C12.92 15 14 13.92 14 9 Z" fill="#fff"/><path d="M21 6.4 C21 8.53 21.47 9 23.6 9 C21.47 9 21 9.47 21 11.6 C21 9.47 20.53 9 18.4 9 C20.53 9 21 8.53 21 6.4 Z" fill="#fff"/></svg><span class="wm" style="font-size:19px"><span style="color:#0f2a4a">create</span><span style="color:#2563eb">cv</span></span></div>
+              <div class="row" style="gap:24px;font-size:13px;color:var(--muted)"><span>Features</span><span>Templates</span><span>Pricing</span><button class="btn btn-primary sm">Build My Resume</button></div>
+            </div>
+            <div style="height:4px;background:var(--border)"><div style="height:100%;width:60%;background:var(--primary)"></div></div>
+            <div class="row" style="justify-content:space-between;padding:18px 24px">
+              <div style="text-align:center"><div style="width:32px;height:32px;border-radius:99px;background:var(--primary);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:13px;font-weight:700">✓</div><div style="font-size:11px;color:var(--muted);margin-top:6px">Info</div></div>
+              <div style="text-align:center"><div style="width:32px;height:32px;border-radius:99px;background:var(--primary);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:13px;font-weight:700">✓</div><div style="font-size:11px;color:var(--muted);margin-top:6px">Experience</div></div>
+              <div style="text-align:center"><div style="width:32px;height:32px;border-radius:99px;border:2px solid var(--primary);color:var(--primary);display:inline-flex;align-items:center;justify-content:center;font-size:13px;font-weight:700">3</div><div style="font-size:11px;color:var(--ink);margin-top:6px;font-weight:600">Education</div></div>
+              <div style="text-align:center"><div style="width:32px;height:32px;border-radius:99px;border:2px solid var(--border);color:var(--muted);display:inline-flex;align-items:center;justify-content:center;font-size:13px;font-weight:700">4</div><div style="font-size:11px;color:var(--muted);margin-top:6px">Skills</div></div>
+              <div style="text-align:center"><div style="width:32px;height:32px;border-radius:99px;border:2px solid var(--border);color:var(--muted);display:inline-flex;align-items:center;justify-content:center;font-size:13px;font-weight:700">5</div><div style="font-size:11px;color:var(--muted);margin-top:6px">Target</div></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- A11Y -->
+        <section id="a11y">
+          <h2>Accessibility</h2>
+          <p class="lead">Baseline rules the UI must meet.</p>
+          <table class="tok">
+            <tr><th>Area</th><th>Rule</th></tr>
+            <tr><td>Contrast</td><td>Body text ≥ 4.5:1. Ink on white = 13.6:1. Muted on white = 4.6:1. Primary on white = 4.6:1 (use for ≥14px/bold or large).</td></tr>
+            <tr><td>Focus</td><td>Every interactive element keeps a visible focus ring (<code>3px rgba(37,99,235,.35)</code>). Never remove outlines without a replacement.</td></tr>
+            <tr><td>Targets</td><td>Tap targets ≥ 40×40px. Buttons/inputs are ≥ 40px tall.</td></tr>
+            <tr><td>Motion</td><td>Honor <code>prefers-reduced-motion</code>; animations are decorative only.</td></tr>
+            <tr><td>Color</td><td>Never encode meaning by color alone — pair with a label/icon (ATS/PRO/FREE badges use text).</td></tr>
+            <tr><td>Labels</td><td>Every input has a visible <code>&lt;label&gt;</code>; icon-only buttons use <code>aria-label</code>.</td></tr>
+          </table>
+        </section>
+
+        <p style="margin-top:64px;font-size:12px;color:#94a3b8;border-top:1px solid var(--border);padding-top:20px">
+          createcv Design System · reflects the live app tokens (<code>tailwind.config.js</code> + <code>src/index.css</code>). Static reference — safe to open standalone.
+        </p>
+      </main>
+    </div>
+  </body>
+</html>
