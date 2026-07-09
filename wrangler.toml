@@ -9,4 +9,5 @@ compatibility_date = "2024-11-01"
 [assets]
 directory = "./client/dist"
 binding = "ASSETS"
-not_found_handling = "single-page-application"
+# The Worker handles SPA fallback itself so missing hashed assets 404 honestly.
+not_found_handling = "none"
