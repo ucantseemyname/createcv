@@ -1,0 +1,7 @@
+# Cloudflare Pages config.
+# Static frontend is built into client/dist; the /api/* routes are served by
+# the Pages Functions in ./functions/api/. Set ANTHROPIC_API_KEY as a Pages
+# secret (Dashboard → Settings → Environment variables) — never commit it.
+name = "createcv"
+compatibility_date = "2024-11-01"
+pages_build_output_dir = "client/dist"

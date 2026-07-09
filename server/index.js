@@ -126,7 +126,7 @@ app.post("/api/generate-resume", async (req, res) => {
 
     const response = await anthropic.messages.create({
       model: MODEL,
-      max_tokens: 2048,
+      max_tokens: 4096,
       system: SYSTEM_PROMPT,
       messages: [{ role: "user", content: userMessage }],
     });
@@ -206,7 +206,7 @@ app.post("/api/analyze-cv", async (req, res) => {
 
     const response = await anthropic.messages.create({
       model: MODEL,
-      max_tokens: 2600,
+      max_tokens: 6000,
       system: ANALYZE_SYSTEM,
       messages: [{ role: "user", content: userMsg }],
     });
