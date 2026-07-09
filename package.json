@@ -8,9 +8,12 @@
     "server": "npm start --prefix server",
     "client": "npm run dev --prefix client",
     "dev": "npm run install:all && concurrently -n server,client -c cyan,magenta \"npm run server\" \"npm run client\"",
-    "build": "npm run build --prefix client"
+    "build": "npm run build --prefix client",
+    "deploy": "wrangler deploy",
+    "preview": "wrangler dev"
   },
   "devDependencies": {
-    "concurrently": "^9.1.0"
+    "concurrently": "^9.1.0",
+    "wrangler": "^4.107.1"
   }
 }
