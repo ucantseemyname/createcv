@@ -138,17 +138,8 @@ export default {
       return json({ error: "Not found" }, 404);
     }
 
-    // Everything else → static site.
-    const assetRes = await env.ASSETS.fetch(request);
-    // If a file wasn't found: only fall back to the SPA shell for extensionless
-    // routes (e.g. /build). Missing hashed assets (…/foo.js) must 404 honestly,
-    // so a stale chunk never gets served index.html and parsed as JS.
-    if (assetRes.status === 404) {
-      const last = pathname.split("/").pop() || "";
-      if (!last.includes(".")) {
-        return env.ASSETS.fetch(new Request(new URL("/index.html", request.url), request));
-      }
-    }
-    return assetRes;
+    // Non-API requests are served directly by Static Assets (see run_worker_first
+    // in wrangler.toml); this is only a safety fallback.
+    return env.ASSETS.fetch(request);
   },
 };

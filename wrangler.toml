@@ -1,6 +1,9 @@
 # Cloudflare Worker + Static Assets.
-# `main` is the Worker that handles /api/* and serves the built SPA via the
-# ASSETS binding. Build the client first (npm run build) so ./client/dist exists.
+# - Static Assets serve the built SPA. `not_found_handling = single-page-application`
+#   makes client routes (/build, /analyze, /resume) return index.html so React
+#   Router can handle them (no redirects).
+# - `run_worker_first = ["/api/*"]` runs worker/index.js ONLY for the API routes;
+#   everything else is served directly from client/dist.
 # Set ANTHROPIC_API_KEY as a Worker secret — never commit it.
 name = "createcv"
 main = "worker/index.js"
@@ -9,5 +12,5 @@ compatibility_date = "2024-11-01"
 [assets]
 directory = "./client/dist"
 binding = "ASSETS"
-# The Worker handles SPA fallback itself so missing hashed assets 404 honestly.
-not_found_handling = "none"
+not_found_handling = "single-page-application"
+run_worker_first = ["/api/*"]
