@@ -21,6 +21,10 @@ const anthropic = new Anthropic({
 
 const MODEL = "claude-sonnet-4-6";
 
+// Coerce a value that may be an array into a comma-separated string.
+const toStr = (v) =>
+  Array.isArray(v) ? v.filter(Boolean).join(", ") : v == null ? "" : String(v);
+
 const SYSTEM_PROMPT = `You are a professional resume writer with 20 years of experience. Write a complete, ATS-optimized resume based on the provided information. Return a JSON object with these exact fields:
 - summary: string (3-4 sentence professional summary)
 - experience: array of { company, title, dates, bullets: string[] (4-5 achievement-focused bullet points) }
@@ -255,10 +259,10 @@ app.post("/api/analyze-cv", async (req, res) => {
         field: e.field || "",
       })),
       extras: {
-        skills: ex.extras?.skills || "",
-        languages: ex.extras?.languages || "",
-        certifications: ex.extras?.certifications || "",
-        summary: ex.extras?.summary || "",
+        skills: toStr(ex.extras?.skills),
+        languages: toStr(ex.extras?.languages),
+        certifications: toStr(ex.extras?.certifications),
+        summary: toStr(ex.extras?.summary),
       },
     };
 

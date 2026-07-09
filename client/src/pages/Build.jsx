@@ -117,7 +117,7 @@ export default function Build() {
       if (!edu0.degree.trim()) e.degree = "Degree is required.";
       if (!edu0.institution.trim()) e.institution = "Institution is required.";
     } else if (s === 3) {
-      if (!form.extras.skills.trim()) e.skills = "Add at least a few skills.";
+      if (!String(form.extras.skills || "").trim()) e.skills = "Add at least a few skills.";
     } else if (s === 4) {
       if (!t.role.trim()) e.role = "Target role is required.";
       if (!t.industry.trim()) e.industry = "Industry is required.";

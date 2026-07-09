@@ -43,6 +43,11 @@ async function generateResume(request, env) {
   }
 }
 
+// The model sometimes returns skills/languages as arrays — always coerce to a
+// comma-separated string (the form fields expect strings).
+const toStr = (v) =>
+  Array.isArray(v) ? v.filter(Boolean).join(", ") : v == null ? "" : String(v);
+
 async function analyzeCv(request, env) {
   if (!env.ANTHROPIC_API_KEY) {
     return json({ error: "Missing ANTHROPIC_API_KEY. Set it in the Worker's variables." }, 500);
@@ -97,10 +102,10 @@ async function analyzeCv(request, env) {
         field: e.field || "",
       })),
       extras: {
-        skills: ex.extras?.skills || "",
-        languages: ex.extras?.languages || "",
-        certifications: ex.extras?.certifications || "",
-        summary: ex.extras?.summary || "",
+        skills: toStr(ex.extras?.skills),
+        languages: toStr(ex.extras?.languages),
+        certifications: toStr(ex.extras?.certifications),
+        summary: toStr(ex.extras?.summary),
       },
     };
     return json({
